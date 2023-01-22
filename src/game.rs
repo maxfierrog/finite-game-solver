@@ -36,23 +36,23 @@ pub trait Game {
     fn possible_moves(&self) -> Vec<Uuid>;
 
     /// Returns a unique encoding of the current state of the game.
-    fn encode_state(&self) -> i32;
+    fn state(&self) -> i32;
         // FIXME: Return hash(state) instead of a UUID in order to interface with
         // more types of games (not just ones whose possible states are injective
         // to the set of possible i32 integers).
 
     /// Returns the categorical state of the game in an optional, being
     /// of type None if the state is not final.
-    fn evaluate_state(&self) -> Option<Outcome>;
+    fn outcome(&self) -> Option<Outcome>;
 }
 
 
 /// Recursive solver for any GAME which implements the Game trait. Accepts
 /// a mutable reference to GAME and a mutable reference SEEN, an empty map.
 /// 
-/// Once the first call goes out of scope, GAME is will again be in its
+/// Once the first call goes out of scope, GAME will again be in its
 /// original state, despite being mutated in the process of execution, and
-/// SEEN will cointain a mapping of all possible states to their corresponding
+/// SEEN will contain a mapping of all possible states to their corresponding
 /// solved outcomes.
 /// 
 /// Time:       O(# of nodes)
@@ -61,19 +61,19 @@ pub trait Game {
 /// TODO: Make this function iterative to avoid memory overhead and stack
 /// overflow errors. Improve memory performance. Implement pruning.
 pub fn solve(game: &mut dyn Game, seen: &mut HashMap<i32, Outcome>) -> Outcome {
-    if let Some(out) = game.evaluate_state() {
+    if let Some(out) = game.outcome() {
         return out
     }
     let mut possible_outcomes: HashSet<Outcome> = HashSet::new();
     for mv in game.possible_moves() {
         game.play(mv);
-        let encoded_state = game.encode_state();
+        let encoded_state = game.state();
         if let Some(out) = seen.get(&encoded_state).copied() {
             possible_outcomes.insert(out);
         } else {
             let out = solve(game, seen);
             possible_outcomes.insert(out);
-            seen.insert(game.encode_state(), out);
+            seen.insert(encoded_state, out);
         }
         game.undo();
     }

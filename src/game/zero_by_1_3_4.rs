@@ -1,5 +1,5 @@
 // Max Fierro, maxfierro@berkeley.edu
-// Friday January 20th, 2022
+// Friday January 21st, 2022
 
 
 use super::{Game, Outcome};
@@ -130,11 +130,11 @@ impl Game for Session {
         }
     }
 
-    fn encode_state(&self) -> i32 {
+    fn state(&self) -> i32 {
         self.coins
     }
 
-    fn evaluate_state(&self) -> Option<Outcome> {
+    fn outcome(&self) -> Option<Outcome> {
         if self.coins <= 0 {
             Some(Outcome::Loss)
         } else {

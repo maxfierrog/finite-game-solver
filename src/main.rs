@@ -14,13 +14,22 @@ use std::io;
 fn main() {
     println!("\n ------ GAME SOLVER ------ \n");
     let num_coins = input_integer();
-    let mut game = zero_by_1_2::Session::new(num_coins);
+    let mut game = zero_by_1_3_4::Session::new(num_coins);
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
     match result {
         Outcome::Loss => println!("\nLoss."),
         Outcome::Tie => println!("\nTie."),
         Outcome::Win => println!("\nWin.")
+    }
+    println!("");
+    for (k, v) in state_map {
+        let curr_out = match v {
+            Outcome::Loss => "Loss.".to_string(),
+            Outcome::Tie => "Tie.".to_string(),
+            Outcome::Win => "Win.".to_string()
+        };
+        println!("{} -> {}", k, curr_out);
     }
 }
 
