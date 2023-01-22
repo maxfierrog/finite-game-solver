@@ -2,6 +2,16 @@
 // Friday January 20th, 2023
 
 
+/* GAME DESCRIPTION
+
+Zero-by-one-or-two is a game where there are N coins, and two players must
+take turns removing one or two coins at a time until there are exactly zero
+coins left. The player who removes the last coins remaining wins, meaning
+that the player whose turn it is when there are zero coins remaining loses.
+
+*/
+
+
 use super::{Game, Outcome};
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
