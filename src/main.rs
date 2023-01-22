@@ -4,13 +4,22 @@
 pub mod game;
 
 use std::io;
+use crate::game::Game;
 use crate::game::coin_game;
+use crate::game::Outcome;
+use crate::game::solve;
 
 fn main() {
     println!("GAME OF COINS!\n");
     let num_coins = input_integer();
-    let game = coin_game::Session::new(num_coins);
-
+    let mut game = coin_game::CoinGame::new(num_coins);
+    game.play(game.move_uuid(coin_game::Move::Two));
+    let result = solve(&mut game);
+    match result {
+        Outcome::Loss => print!("Loss."),
+        Outcome::Tie => print!("Tie."),
+        Outcome::Win => print!("Win.")
+    }
 }
 
 // Asks user to input an integer.

@@ -6,6 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+strum = "0.24"
+strum_macros = "0.24"
+bimap = "0.6"
+sha1 = "0.10"
 
 [dependencies.uuid]
 version = "1.2.2"

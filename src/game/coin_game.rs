@@ -1,90 +1,91 @@
 // Max Fierro, maxfierro@berkeley.edu
 // Friday January 20th, 2022
 
-// A possible move.
+use super::{Game, Outcome};
+use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
+use bimap::BiMap;
+use uuid::Uuid;
+
+
+#[derive(Eq, Hash, PartialEq, Clone, Copy, EnumIter)]
 pub enum Move {
     One,
     Two
 }
 
-// Represents the state of an ongoing game session.
-#[derive(Clone, Copy)]
-pub enum State {
-    Win,
-    Loss,
-    Ongoing(i32)
+
+pub struct CoinGame {
+    coins: i32,
+    moves: BiMap<Uuid, Move>,
+    stack: Vec<Move>
 }
 
-// Represents an ongoing game session.
-pub struct Session {
-    state: State,
-    turn: bool
-}
-
-impl Session {
-
-    // Returns a new game. Turn should be true if you have the first turn.
+impl CoinGame {
     pub fn new(coins: i32) -> Self {
-        Session {
-            state: State::Ongoing(coins),
-            turn: true
+        let mut moves: BiMap<Uuid, Move> = BiMap::new();
+        for mv in Move::iter() {
+            moves.insert(Uuid::new_v4(), mv);
+        }
+        CoinGame {
+            coins,
+            moves,
+            stack: Vec::new()
         }
     }
 
-    // Returns the amount of coins left in the game.
     fn coins_left(&self) -> i32 {
-        match self.state {
-            State::Ongoing(num) => num,
-            _ => 0
-        }
+        self.coins
     }
 
-    // Returns true if it is your turn.
-    fn my_turn(&self) -> bool {
-        self.turn
+    pub fn move_uuid(&self, mv: Move) -> Uuid {
+        *self.moves.get_by_right(&mv).expect("Invalid move.")
     }
+}
 
-    // Indicates that the player's turn has ended.
-    fn turn_over(&mut self) {
-        self.turn = !self.turn
-    }
-
-    // Mutates the game's state according to the provided move. Returns
-    // the resulting state.
-    pub fn do_move(&mut self, mv: Move) -> State {
-        let curr_coins = self.coins_left();
+impl Game for CoinGame {
+    fn play(&mut self, mv: Uuid) {
+        let mv = *self.moves.get_by_left(&mv).expect("Error finding move.");
         match mv {
-            Move::One => { 
-                if curr_coins == 1 && self.my_turn() {
-                    self.state = State::Win;
-                } else if curr_coins == 1 {
-                    self.state = State::Loss;
-                } else {
-                    self.state = State::Ongoing(curr_coins - 1);
-                }
+            Move::One => {
+                self.coins -= 1;
             },
             Move::Two => {
-                if curr_coins == 2 && self.my_turn() {
-                    self.state = State::Win;
-                } else if curr_coins == 2 {
-                    self.state = State::Loss;
+                if self.coins >= 2 {
+                    self.coins -= 2;
                 } else {
-                    self.state = State::Ongoing(curr_coins - 2);
+                    panic!("Illegal move!");
                 }
             }
         }
-        self.turn_over();
-        self.state
+        self.stack.push(mv.clone());
     }
 
-    // Returns an option of a vector containing possible moves derived from
-    // the current state of the game session.
-    pub fn possible_moves(&self) -> Option<Vec<Move>> {
+    fn possible_moves(&self) -> Vec<Uuid> {
         let coins_left = self.coins_left();
         if coins_left > 1 {
-            Some(vec![Move::One, Move::Two])
+            vec![self.move_uuid(Move::One), self.move_uuid(Move::Two)]
         } else if coins_left == 1 {
-            Some(vec![Move::One])
+            vec![self.move_uuid(Move::One)]
+        } else {
+            vec![]
+        }
+    }
+
+    fn undo(&mut self) {
+        match self.stack.pop().expect("Expected move, found nothing.") {
+            Move::One => self.coins += 1,
+            Move::Two => self.coins += 2
+        }
+    }
+
+    fn encode_state(&self) -> i32 {
+        self.coins
+    }
+
+    fn evaluate_state(&self) -> Option<Outcome> {
+        if self.coins <= 0 {
+            Some(Outcome::Loss)
         } else {
             None
         }

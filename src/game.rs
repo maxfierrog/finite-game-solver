@@ -1,11 +1,10 @@
 // Max Fierro, maxfierro@berkeley.edu
 // Friday January 20th, 2022
 
-use uuid::Uuid;
-use std::collections::{HashSet, HashMap};
-
 pub mod coin_game;
 
+use uuid::Uuid;
+use std::{collections::{HashSet, HashMap}, hash::Hash};
 
 /// The possible categorical states of a discrete two-player game.
 #[derive(Eq, Hash, PartialEq, Clone, Copy)]
@@ -14,7 +13,6 @@ pub enum Outcome {
     Loss,
     Tie
 }
-
 
 /// Common interface for a game.
 pub trait Game {
@@ -29,19 +27,19 @@ pub trait Game {
     fn possible_moves(&self) -> Vec<Uuid>;
 
     /// Returns a unique encoding of the current state of the game.
-    fn encode_state(&self) -> Uuid;
+    fn encode_state(&self) -> i32;
+    // FIXME: Probably best to return hash(state) instead of a UUID.
 
     /// Returns the categorical state of the game.
     fn evaluate_state(&self) -> Option<Outcome>;
 }
 
-
-fn solve(game: &mut dyn Game) -> Outcome {
+pub fn solve(game: &mut dyn Game) -> Outcome {
     if let Some(out) = game.evaluate_state() {
         return out
     }
     let mut possible_outcomes: HashSet<Outcome> = HashSet::new();
-    let mut seen_states: HashMap<Uuid, Outcome> = HashMap::new();
+    let mut seen_states: HashMap<i32, Outcome> = HashMap::new();
     for mv in game.possible_moves() {
         game.play(mv);
         let encoded_state = game.encode_state();
