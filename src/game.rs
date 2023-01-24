@@ -5,6 +5,7 @@
 /* ---------- AVAILABLE GAMES ---------- */
 pub mod zero_by_1_2;
 pub mod zero_by_1_3_4;
+pub mod tic_tac_toe;
 
 
 use uuid::Uuid;

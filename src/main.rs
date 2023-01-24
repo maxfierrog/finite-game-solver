@@ -14,7 +14,7 @@ use std::io;
 fn main() {
     println!("\n ------ GAME SOLVER ------ \n");
     let num_coins = input_integer();
-    let mut game = zero_by_1_3_4::Session::new(num_coins);
+    let mut game = zero_by_1_2::Session::new(num_coins);
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
     match result {
