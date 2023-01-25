@@ -20,7 +20,7 @@ This project provides the following:
 ## Solved games
 
 - N-to-0-by-1-or-2: Two players take turns removing one or two coins from a pool of N coins. The person who removes the last coin(s) wins.
-- N-to-0-by-1-3-or-4: Two players take turns removing one, three, or four coins from a pool of N coins. The person who removest the last coin(s) wins.
+- N-to-0-by-1-3-or-4: Two players take turns removing one, three, or four coins from a pool of N coins. The person who removes the last coin(s) wins.
 
 ## Development notes
 
