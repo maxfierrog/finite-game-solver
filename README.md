@@ -27,7 +27,7 @@ This project provides the following:
 - This project is currently barebones, and has no UI
 - Despite looking finished, Tic-Tac-Toe does not currently implement the Game interface correctly
 
-## TODO:
+## TODO
 
 - Generic solver: Make this function iterative to avoid memory overhead and stack overflows. Improve memory performance. Add option to prune pointless states.
 - UI: Implement a basic way to choose which game you want to play. Implement a generic graphic user interface. Implement human-involved matches.
