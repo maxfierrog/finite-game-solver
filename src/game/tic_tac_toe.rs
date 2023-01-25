@@ -70,32 +70,8 @@ impl Session {
         *self.moves.get_by_left(&id).unwrap()
     }
 
-    fn my_turn(&self) -> bool {
-        let mut empty = 0;
-        for x in 0..3 {
-            for y in 0..3 {
-                if self.symbol_at(x, y) == None {
-                    empty += 1;
-                }
-            }
-        }
-        empty % 2 == 1
-    }
-
-    fn board_full(&self) -> bool {
-        let mut empty = 0;
-        for x in 0..3 {
-            for y in 0..3 {
-                if self.symbol_at(x, y) == None {
-                    empty += 1;
-                }
-            }
-        }
-        empty == 0
-    }
-
     fn retain_move_candidates(&self, v: &mut Vec<Uuid>) {
-        if v.len() % 2 == 0 {
+        if v.len() % 2 == 1 {
             // O's turn, eliminate Xs from v
             v.retain(|&o| match self.move_from_uuid(o) {
                 Move::O(_) => true,
@@ -134,6 +110,19 @@ impl Game for Session {
                 }
             }
         }
+        for i in self.board {
+            for j in i {
+                if let Some(c) = j {
+                    if c {
+                        print!("X ");
+                    } else {
+                        print!("O ");
+                    }
+                }
+            }
+            print!("\n");
+        }
+        println!("-------------------------");
         self.stack.push(*mv);
     }
 
@@ -256,11 +245,14 @@ impl Game for Session {
         }
 
         // Returns outcome relative to X player
-        if h_win || v_win || d_win && self.my_turn() {
+        if h_win || v_win || d_win && self.stack.len() % 2 == 0 {
+            println!("Loss");
             Some(Outcome::Loss)
         } else if h_win || v_win || d_win {
+            println!("Win");
             Some(Outcome::Win)
-        } else if self.board_full() {
+        } else if self.stack.len() == 9 {
+            println!("Tie");
             Some(Outcome::Tie)
         } else {
             None
