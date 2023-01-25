@@ -13,23 +13,18 @@ use std::io;
 
 fn main() {
     println!("\n ------ GAME SOLVER ------ \n");
-    let mut game = tic_tac_toe::Session::new();
+    println!("You are playing N-to-0-by-1-or-2 \n");
+    let num_coins = input_integer();
+    let mut game = zero_by_1_2::Session::new(num_coins);
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
+    print!("\n If there were {} coins remaining and it was your turn, 
+    you could at best turn this into a ", num_coins);
     match result {
-        Outcome::Loss => println!("\nLoss."),
-        Outcome::Tie => println!("\nTie."),
-        Outcome::Win => println!("\nWin.")
+        Outcome::Loss => println!("loss."),
+        Outcome::Tie => println!("tie."),
+        Outcome::Win => println!("win.")
     }
-    // println!("");
-    // for (k, v) in state_map {
-    //     let curr_out = match v {
-    //         Outcome::Loss => "Loss.".to_string(),
-    //         Outcome::Tie => "Tie.".to_string(),
-    //         Outcome::Win => "Win.".to_string()
-    //     };
-    //     println!("{} -> {}", k, curr_out);
-    // }
 }
 
 /// Asks user to input an integer and returns it, re-prompting if
@@ -38,7 +33,7 @@ fn input_integer() -> i32 {
     let mut failed: bool = true;
     let mut result: i32 = 0;
     while failed {
-        println!("Input desired amount of coins:\n");
+        println!("Input desired amount of coins (N):\n");
         let mut input: String = String::new();
         io::stdin()
             .read_line(&mut input)
