@@ -86,3 +86,9 @@ pub fn solve(game: &mut dyn Game, seen: &mut HashMap<i32, Outcome>) -> Outcome {
         Outcome::Loss
     }
 }
+
+
+// The same thing as solve, but iterative to avoid overflows.
+// pub fn solve_iter(game &mut dyn Game, seen: &mut HashMap<i32, Outcome>) -> Outcome {
+
+// }

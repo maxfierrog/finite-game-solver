@@ -12,14 +12,13 @@ use std::io;
 
 
 fn main() {
-    println!("\n ------ GAME SOLVER ------ \n");
-    println!("You are playing N-to-0-by-1-or-2 \n");
-    let num_coins = input_integer();
-    let mut game = zero_by_1_2::Session::new(num_coins);
+    println!("\n -------------------- GAME SOLVER -------------------- \n");
+    println!("You are playing {}.\n", tic_tac_toe::GAME_NAME);
+    println!("{}\n", tic_tac_toe::GAME_DESCRIPTION);
+    let mut game = tic_tac_toe::Session::new();
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
-    print!("\n If there were {} coins remaining and it was your turn, 
-    you could at best turn this into a ", num_coins);
+    count_outcomes(&state_map);
     match result {
         Outcome::Loss => println!("loss."),
         Outcome::Tie => println!("tie."),
@@ -31,7 +30,7 @@ fn main() {
 /// the user inputs something unexpected.
 fn input_integer() -> i32 {
     let mut failed: bool = true;
-    let mut result: i32 = 0;
+    let mut result: u64 = 0;
     while failed {
         println!("Input desired amount of coins (N):\n");
         let mut input: String = String::new();
@@ -46,5 +45,21 @@ fn input_integer() -> i32 {
             }
         };
     }
-    result
+    result as i32
+}
+
+fn count_outcomes(state_map: &HashMap<i32, Outcome>) {
+    let mut ties = 0;
+    let mut wins = 0;
+    let mut losses = 0;
+    for (_, out) in state_map {
+        match out {
+            Outcome::Loss => { losses += 1; },
+            Outcome::Win => { wins += 1; },
+            Outcome::Tie => { ties += 1; }
+        }
+    }
+    println!("Wins: {}", wins);
+    println!("Losses: {}", losses);
+    println!("Ties: {}", ties);
 }

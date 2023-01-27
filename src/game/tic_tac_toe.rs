@@ -2,16 +2,14 @@
 // Monday, January 23rd, 2023
 
 
-/* GAME DESCRIPTION
-
-Cmon, you know tic-tac-toe, right?
-
-*/
-
-
 use super::{Game, Outcome};
 use bimap::BiMap;
 use uuid::Uuid;
+
+
+pub const GAME_NAME: &str = "Tic-Tac-Toe";
+pub const GAME_DESCRIPTION: &str = 
+"C'mon, you know tic-tac-toe, right?";
 
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy)]
@@ -64,6 +62,32 @@ impl Session {
         self.board[x as usize][y as usize]
     }
 
+    fn print_board(&self) {
+        for i in self.board {
+            for j in i {
+                if let Some(c) = j {
+                    if c {
+                        print!("X ");
+                    } else {
+                        print!("O ")
+                    }
+                } else {
+                    print!("  ");
+                }
+            }
+            print!("\n");
+        }
+        println!("-----");
+        for i in self.stack.iter() {
+            let place = match i { 
+                Move::O(place) => { print!("O: "); place },
+                Move::X(place) => { print!("X: "); place }
+            };
+            print!("({}, {}) => ", place.x, place.y);
+        }
+        println!("\n");
+    }
+
     /* UTILITIES */
 
     fn move_from_uuid(&self, id: Uuid) -> Move {
@@ -71,7 +95,7 @@ impl Session {
     }
 
     fn retain_move_candidates(&self, v: &mut Vec<Uuid>) {
-        if v.len() % 2 == 1 {
+        if self.stack.len() % 2 == 0 {
             // O's turn, eliminate Xs from v
             v.retain(|&o| match self.move_from_uuid(o) {
                 Move::O(_) => true,
@@ -110,19 +134,6 @@ impl Game for Session {
                 }
             }
         }
-        for i in self.board {
-            for j in i {
-                if let Some(c) = j {
-                    if c {
-                        print!("X ");
-                    } else {
-                        print!("O ");
-                    }
-                }
-            }
-            print!("\n");
-        }
-        println!("-------------------------");
         self.stack.push(*mv);
     }
 
@@ -162,11 +173,11 @@ impl Game for Session {
             for y in 0..3 {
                 let curr: i32;
                 match self.symbol_at(x, y) {
-                    Some(true) => { curr = 2 },
-                    Some(false) => { curr = 1 },
-                    None => { curr = 0 }
+                    Some(true) => { curr = 3; },
+                    Some(false) => { curr = 2; },
+                    None => { curr = 1; }
                 }
-                result += curr.pow(counter);
+                result += curr * 10_i32.pow(counter);
                 counter += 1;
             }
         }
@@ -245,14 +256,11 @@ impl Game for Session {
         }
 
         // Returns outcome relative to X player
-        if h_win || v_win || d_win && self.stack.len() % 2 == 0 {
-            println!("Loss");
+        if h_win || v_win || d_win {
             Some(Outcome::Loss)
         } else if h_win || v_win || d_win {
-            println!("Win");
             Some(Outcome::Win)
         } else if self.stack.len() == 9 {
-            println!("Tie");
             Some(Outcome::Tie)
         } else {
             None

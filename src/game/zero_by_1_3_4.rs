@@ -2,21 +2,19 @@
 // Friday January 21st, 2023
 
 
-/* GAME DESCRIPTION
-
-Zero-by-one-or-three-or-four is a game where there are N coins, and two
-players take turns removing one or three or four coins at a time until there
-are zero coins left. The player who removes the last coins remaining wins,
-and the player whose turn it is when there are no coins remaining loses.
-
-*/
-
-
 use super::{Game, Outcome};
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 use bimap::BiMap;
 use uuid::Uuid;
+
+
+pub const GAME_NAME: &str = "Zero-by-1-3-or-4";
+pub const GAME_DESCRIPTION: &str =
+"Zero-by-one-or-three-or-four is a game where there are N coins, and two
+players take turns removing one or three or four coins at a time until there
+are zero coins left. The player who removes the last coins remaining wins,
+and the player whose turn it is when there are no coins remaining loses.";
 
 
 #[derive(Eq, Hash, PartialEq, Clone, Copy, EnumIter)]
