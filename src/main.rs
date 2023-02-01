@@ -20,9 +20,9 @@ fn main() {
     let result = solve(&mut game, &mut state_map);
     count_outcomes(&state_map);
     match result {
-        Outcome::Loss => println!("loss."),
-        Outcome::Tie => println!("tie."),
-        Outcome::Win => println!("win.")
+        Outcome::Loss => println!("loss"),
+        Outcome::Tie => println!("tie"),
+        Outcome::Win => println!("win")
     }
 }
 
@@ -59,7 +59,7 @@ fn count_outcomes(state_map: &HashMap<i32, Outcome>) {
             Outcome::Tie => { ties += 1; }
         }
     }
-    println!("Wins: {}", wins);
-    println!("Losses: {}", losses);
-    println!("Ties: {}", ties);
+    println!("wins: {}", wins);
+    println!("losses: {}", losses);
+    println!("ties: {} \n", ties);
 }
