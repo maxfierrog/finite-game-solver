@@ -131,7 +131,7 @@ impl Game for Session {
     }
 
     fn state(&self) -> i32 {
-        self.board.canonical().hash()
+        self.board.hash()
     }
 
     fn outcome(&self) -> Option<Outcome> {

@@ -102,8 +102,6 @@ impl Board {
                 for r in 0..4 {
                     let mut new_board = self.clone();
                     new_board.transform(f, r);
-                    println!("*********");
-                    new_board.print();
                     if new_board.hash() > max_hash {
                         canon = new_board;
                         max_hash = canon.hash();
@@ -115,30 +113,22 @@ impl Board {
             for f in 0..2 {
                 let mut new_board = self.clone();
                 new_board.transform(f, 0);
-                println!("*********");
-                new_board.print();
                 if new_board.hash() > max_hash {
                     canon = new_board;
                     max_hash = canon.hash();
                 }
             }
-
             // Reflect board horizontally
             let mut new_board = self.clone();
             new_board.transform(0, 1);
             new_board.transform(1, 3);
-            println!("*********");
-            new_board.print();
             if new_board.hash() > max_hash {
                 canon = new_board;
                 max_hash = canon.hash();
             }
-
             // Rotate board 180 degrees
             let mut new_board = self.clone();
             new_board.transform(0, 2);
-            println!("*********");
-            new_board.print();
             if new_board.hash() > max_hash {
                 canon = new_board;
             }
