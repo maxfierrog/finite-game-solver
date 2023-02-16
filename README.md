@@ -14,21 +14,20 @@ It boils down to being able to tell, given any possible state of the game, wheth
 
 This project provides the following:
 * A `Game` interface (or trait, as the crabs call it) which comes with a generic `solver`. You can use this solver to solve any game.
-* A module with a few games which implement said interface, and may additionally implement more efficient game-specific solvers.
+* A module with a few games which implement said interface.
 * A (not-yet-existent) UI module, which helps us actually play the games imperfectly as humans.
 
 ## Solved games
 
 - N-to-0-by-1-or-2: Two players take turns removing one or two coins from a pool of N coins. The person who removes the last coin(s) wins.
 - N-to-0-by-1-3-or-4: Two players take turns removing one, three, or four coins from a pool of N coins. The person who removes the last coin(s) wins.
+- NxM Tic-Tac-Toe: The same thing as Tic-Tac-Toe, but with variable length and width. The regular 3x3 tic-tac-toe is a special case of this one. Performing full analyses starts getting impractical for N and M above 6 or 7.
 
 ## Development notes
 
 - This project is currently barebones, and has no UI
-- Despite looking finished, Tic-Tac-Toe does not currently implement the Game interface correctly
 
 ## TODO
 
 - Generic solver: Make this function iterative to avoid memory overhead and stack overflows. Improve memory performance. Add option to prune pointless states.
 - UI: Implement a basic way to choose which game you want to play. Implement a generic graphic user interface. Implement human-involved matches.
-- Games: Fix tic-tac-toe. Connect-4 sounds pretty cool as I hear it can be parallelized, which would take advantage of Rust's design. Abstract the N-to-0 games to accept any coin-removal amounts.
