@@ -10,10 +10,10 @@ use crate::game::*;
 
 
 fn main() {
-    println!("\n -------- GAME SOLVER -------- \n");
+    println!("\n ----------- GAME SOLVER ----------- \n");
     println!("You are playing {}.\n", tic_tac_toe::GAME_NAME);
     println!("{}\n", tic_tac_toe::GAME_DESCRIPTION);
-    let mut game = tic_tac_toe::Session::new(4, 3, 3);
+    let mut game = tic_tac_toe::Session::new(3, 3, 3);
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
     analyze(&state_map);
