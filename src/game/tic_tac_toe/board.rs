@@ -31,6 +31,8 @@ impl Board {
 
     pub fn symbol_at(&self, i: i32, j: i32) -> Option<bool> {
         if i >= self.height || i < 0 || j >= self.width || j < 0 {
+            self.print();
+            println!("BAD READ: {}, {}", i, j);
             panic!("Out of bounds read on board.");
         }
         self.contents[i as usize][j as usize]
@@ -100,6 +102,7 @@ impl Board {
                 for r in 0..4 {
                     let mut new_board = self.clone();
                     new_board.transform(f, r);
+                    println!("*********");
                     new_board.print();
                     if new_board.hash() > max_hash {
                         canon = new_board;
@@ -112,6 +115,8 @@ impl Board {
             for f in 0..2 {
                 let mut new_board = self.clone();
                 new_board.transform(f, 0);
+                println!("*********");
+                new_board.print();
                 if new_board.hash() > max_hash {
                     canon = new_board;
                     max_hash = canon.hash();
@@ -122,6 +127,8 @@ impl Board {
             let mut new_board = self.clone();
             new_board.transform(0, 1);
             new_board.transform(1, 3);
+            println!("*********");
+            new_board.print();
             if new_board.hash() > max_hash {
                 canon = new_board;
                 max_hash = canon.hash();
@@ -130,6 +137,8 @@ impl Board {
             // Rotate board 180 degrees
             let mut new_board = self.clone();
             new_board.transform(0, 2);
+            println!("*********");
+            new_board.print();
             if new_board.hash() > max_hash {
                 canon = new_board;
             }
@@ -178,7 +187,7 @@ impl Board {
             new_contents.push(row);
         }
         for i in 0..self.height {
-            for j in 0..self.width {   
+            for j in 0..self.width {
                 new_contents[j as usize][(self.height - i - 1) as usize] 
                     = self.symbol_at(i, j);
             }
@@ -246,8 +255,8 @@ impl Board {
 
     fn diagonal_win(&self) -> bool {
         let mut win = false;
-        for i in 0..(self.width - self.win + 1) {
-            for j in 0..(self.height - self.win + 1) {
+        for i in 0..(self.height - self.win + 1) {
+            for j in 0..(self.width - self.win + 1) {
                 if self.check_diag_win_from(i, j) {
                     win = true;
                 }
@@ -256,8 +265,8 @@ impl Board {
         // this is so dumb 
         let mut b = self.clone();
         b.flip();
-        for i in 0..(b.width - b.win + 1) {
-            for j in 0..(b.height - b.win + 1) {
+        for i in 0..(b.height - b.win + 1) {
+            for j in 0..(b.width - b.win + 1) {
                 if b.check_diag_win_from(i, j) {
                     win = true;
                 }

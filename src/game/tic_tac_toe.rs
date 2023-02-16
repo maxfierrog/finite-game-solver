@@ -76,9 +76,6 @@ impl Session {
                 Move::O(_) => false
             });
         }
-        println!("--------");
-        self.board.canonical();
-        println!("--------");
     }
 }
 
