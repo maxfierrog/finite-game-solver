@@ -80,10 +80,6 @@ impl Session {
 }
 
 impl Game for Session {
-    fn solve(&self) -> Outcome {
-        Outcome::Tie
-    }
-
     fn play(&mut self, mv: Uuid) {
         let mv = self.moves.get_by_left(&mv).expect("Could not find move.");
         match mv {

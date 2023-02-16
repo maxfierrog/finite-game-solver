@@ -67,9 +67,9 @@ impl Board {
         if self.horizontal_win()
             || self.vertical_win() 
             || self.diagonal_win() {
-            Some(Outcome::Loss)
+            Some(Outcome::Loss(0))
         } else if moves_made == moves_max {
-            Some(Outcome::Tie)
+            Some(Outcome::Tie(0))
         } else {
             None
         }

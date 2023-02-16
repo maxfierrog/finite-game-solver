@@ -31,8 +31,6 @@ pub struct Session {
 }
 
 impl Session {
-    // FIXME: Return Result<Self, Error> instead, and have the error case
-    // be when it is handed a non-positive amount of coins.
     pub fn new(coins: i32) -> Self {
         if coins < 0 { 
             panic!("Non-positive number of coins.");
@@ -58,13 +56,6 @@ impl Session {
 }
 
 impl Game for Session {
-    fn solve(&self) -> Outcome {
-        match self.coins_left() % 3 {
-            1 => Outcome::Loss,
-            _ => Outcome::Win
-        }
-    }
-
     fn play(&mut self, mv: Uuid) {
         let mv = *self.moves.get_by_left(&mv).expect("Error finding move.");
         match mv {
@@ -106,7 +97,7 @@ impl Game for Session {
 
     fn outcome(&self) -> Option<Outcome> {
         if self.coins <= 0 {
-            Some(Outcome::Loss)
+            Some(Outcome::Loss(0))
         } else {
             None
         }

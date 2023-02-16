@@ -5,61 +5,65 @@
 pub mod game;
 
 
-// Using hash maps to map game states to their solved outcomes.
 use std::collections::HashMap;
 use crate::game::*;
-use std::io;
 
 
 fn main() {
-    println!("\n -------------------- GAME SOLVER -------------------- \n");
+    println!("\n -------- GAME SOLVER -------- \n");
     println!("You are playing {}.\n", tic_tac_toe::GAME_NAME);
     println!("{}\n", tic_tac_toe::GAME_DESCRIPTION);
-    let mut game = tic_tac_toe::Session::new(3, 1, 3);
+    let mut game = tic_tac_toe::Session::new(4, 3, 3);
     let mut state_map: HashMap<i32, Outcome> = HashMap::new();
     let result = solve(&mut game, &mut state_map);
-    count_outcomes(&state_map);
+    analyze(&state_map);
     match result {
-        Outcome::Loss => println!("loss"),
-        Outcome::Tie => println!("tie"),
-        Outcome::Win => println!("win")
+        Outcome::Loss(rem) => println!("Loss in {}!", rem),
+        Outcome::Tie(rem) => println!("Tie in {}!", rem),
+        Outcome::Win(rem) => println!("Win in {}!", rem)
     }
 }
 
-/// Asks user to input an integer and returns it, re-prompting if
-/// the user inputs something unexpected.
-fn input_integer() -> i32 {
-    let mut failed: bool = true;
-    let mut result: u64 = 0;
-    while failed {
-        println!("Input desired amount of coins (N):\n");
-        let mut input: String = String::new();
-        io::stdin()
-            .read_line(&mut input)
-            .expect("Failed to read line.");
-        result = match input.trim().parse() {
-            Ok(num) => { failed = false; num },
-            Err(_) => { 
-                println!("\nPlease type in a positive integer!\n");
-                continue
-            }
-        };
-    }
-    result as i32
-}
 
-fn count_outcomes(state_map: &HashMap<i32, Outcome>) {
-    let mut ties = 0;
-    let mut wins = 0;
-    let mut losses = 0;
+fn analyze(state_map: &HashMap<i32, Outcome>) {
+    let mut map: HashMap<i32, (i32, i32, i32, i32)> = HashMap::new();
     for (_, out) in state_map {
         match out {
-            Outcome::Loss => { losses += 1; },
-            Outcome::Win => { wins += 1; },
-            Outcome::Tie => { ties += 1; }
+            Outcome::Loss(rem) => { 
+                let values = map.entry(*rem)
+                    .or_insert((0, 0, 0, 0));
+                (*values).0 += 1;
+                (*values).3 += 1;
+            },
+            Outcome::Win(rem) => { 
+                let values = map.entry(*rem)
+                    .or_insert((0, 0, 0, 0));
+                (*values).2 += 1;
+                (*values).3 += 1;
+            },
+            Outcome::Tie(rem) => { 
+                let values = map.entry(*rem)
+                    .or_insert((0, 0, 0, 0));
+                (*values).1 += 1;
+                (*values).3 += 1;
+            }
         }
     }
-    println!("wins: {}", wins);
-    println!("losses: {}", losses);
-    println!("ties: {} \n", ties);
+    let mut totals = (0, 0, 0, 0);
+    let mut collected = Vec::new();
+    for (rem, values) in map.iter() {
+        collected.push((rem, values));
+    }
+    collected.sort_by(|a, b| b.0.cmp(a.0));
+    println!("Rem\tWin\tLose\tTie\tTotal");
+    println!("---------------------------------------");
+    for row in collected {
+        println!("{}\t{}\t{}\t{}\t{}\t", row.0, row.1.2, row.1.0, row.1.1, row.1.3);
+        totals.0 += row.1.0;
+        totals.1 += row.1.1;
+        totals.2 += row.1.2;
+        totals.3 += row.1.3;
+    }
+    println!("---------------------------------------");
+    println!("Tot\t{}\t{}\t{}\t{}\t\n", totals.2, totals.0, totals.1, totals.3);
 }

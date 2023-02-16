@@ -59,37 +59,6 @@ impl Session {
 }
 
 impl Game for Session {
-    fn solve(&self) -> Outcome {
-        let mut curr = Outcome::Win;
-        let mut n_1 = Outcome::Win;
-        let mut n_2 = Outcome::Loss;
-        let mut n_3 = Outcome::Win;
-        let mut n_4 = Outcome::Loss;
-        match self.coins_left() {
-            0 => n_4,
-            1 => n_3,
-            2 => n_2,
-            3 => n_1,
-            4 => curr,
-            _ => {
-                let mut count = 4;
-                while self.coins_left() > count {
-                    count += 1;
-                    n_4 = n_3;
-                    n_3 = n_2;
-                    n_2 = n_1;
-                    n_1 = curr;
-                    curr = if [n_1, n_3, n_4].contains(&Outcome::Loss) {
-                        Outcome::Win
-                    } else {
-                        Outcome::Loss
-                    };
-                }
-                curr
-            }
-        }
-    }
-
     fn play(&mut self, mv: Uuid) {
         let mv = *self.moves.get_by_left(&mv).expect("Error finding move.");
         match mv {
@@ -144,7 +113,7 @@ impl Game for Session {
 
     fn outcome(&self) -> Option<Outcome> {
         if self.coins <= 0 {
-            Some(Outcome::Loss)
+            Some(Outcome::Loss(0))
         } else {
             None
         }
