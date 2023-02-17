@@ -52,8 +52,8 @@ pub fn solve(game: &mut dyn Game, seen: &mut HashMap<i32, Outcome>) -> Outcome {
 
 fn get_outcome(available: Vec<Outcome>) -> Outcome {
     let mut w_rem = i32::MAX;
-    let mut l_rem = i32::MAX;
     let mut t_rem = i32::MAX;
+    let mut l_rem = 0;
     let mut win = false;
     let mut tie = false;
     for out in available {
@@ -71,7 +71,7 @@ fn get_outcome(available: Vec<Outcome>) -> Outcome {
                 }
             },
             Outcome::Win(rem) => {
-                if (rem + 1) < l_rem {
+                if (rem + 1) > l_rem {
                     l_rem = rem + 1;
                 }
             }
